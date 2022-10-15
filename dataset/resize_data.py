@@ -18,3 +18,8 @@ new_lat = np.linspace(ds_mean.latitude[0], ds_mean.latitude[-1], target.dims["la
 dsi = ds_mean.interp(latitude=new_lat, longitude=new_lon)
 
 dsi.sel(year_month=ds_mean.year_month[238]).u10.plot()
+
+#kalo mau export ke netcdf kudu disatuin index waktunya
+dsi = dsi.reset_index('year_month', drop=False)
+
+dsi.to_netcdf('angin_bulanan.nc')
