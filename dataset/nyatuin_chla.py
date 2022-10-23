@@ -19,8 +19,13 @@ def data_siap(path, path_data):
     time_da = xr.DataArray(times, [('time', times)])
     data = data.expand_dims(time=time_da)
     
+    xr.Dataset.close(data)
+    
     return data
 
-data_gabungan = xr.concat([data_siap(path, path_data[0]), data_siap(path, path_data[1]), data_siap(path, path_data[2])], dim='time')
+data_gabungan = data_siap(path, path_data[0])
+
+for t in range(1, len(path_data)):
+    data_gabungan = xr.concat([data_gabungan, data_siap(path, path_data[t])], dim='time')
 
 data_gabungan
