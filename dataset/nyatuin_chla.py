@@ -27,5 +27,6 @@ data_gabungan = data_siap(path, path_data[0])
 
 for t in range(1, len(path_data)):
     data_gabungan = xr.concat([data_gabungan, data_siap(path, path_data[t])], dim='time')
+    print(str(t)+" of "+str(len(path_data)))
 
 data_gabungan
