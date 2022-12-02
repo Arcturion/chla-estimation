@@ -14,8 +14,7 @@ def data_siap(path, path_data):
   
   
 def irisan(data1, data2):
-    masking_1 = (data2.where(data2>0)).fillna(np.nan)
-    masking_2 = (data1.where(masking_1>0)).fillna(np.nan)
+    masking_2 = (data1.where(data2>0)).fillna(np.nan)
     
     return masking_2
 
