@@ -2,6 +2,7 @@ import xarray as xr
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+import pandas as pd
 
 def data_siap(path, path_data):
     
@@ -55,6 +56,8 @@ def make_dataset():
         u10_4= interpolasi(ds.u10.sel(time='2002-10-01')[3], data1).to_numpy()
         v10_4= interpolasi(ds.v10.sel(time='2002/10/01')[3], data1).to_numpy()
         
+        chlor_a= data2.chlor_a.to_numpy()
+        
         data1 = data1.assign(u10_1=(['lat','lon'],u10_1))
         data1 = data1.assign(v10_1=(['lat','lon'],v10_1))
         
@@ -66,6 +69,8 @@ def make_dataset():
         
         data1 = data1.assign(u10_4=(['lat','lon'],u10_4))
         data1 = data1.assign(v10_4=(['lat','lon'],v10_4))
+        
+        data1 = data1.assign(chlor_a_1=(['lat','lon'], chlor_a))
         
         break
     return data1
@@ -111,3 +116,29 @@ data1 = data1.assign(v10=(['lat','lon'],tes2))
 (data1.v10.where(data1.chlor_a>0)).fillna(np.nan).plot()
 
 array_jadi = (data1.v10.where(data1.chlor_a>0)).fillna(np.nan).to_numpy()
+
+def jadi_array(data):
+    
+    a = data.to_numpy()
+    a = a.flatten()
+    
+    return a
+
+variabel = ['chlor_a', 'u10_1', 'v10_1', 'u10_2', 'v10_2', 'u10_3', 'v10_3', 'u10_4', 'v10_4', 'chlor_a_1']
+
+#tumbal
+a = jadi_array(data['chlor_a'])
+
+for variabel in variabel:
+    b = jadi_array(data[variabel])
+    a = np.column_stack((a,b))
+    print(a.shape)
+    break
+
+data_array = pd.DataFrame(a)
+data_array.drop(0, inplace=True, axis=1)
+data_array.columns = ['chlor_a', 'u10_1', 'v10_1', 'u10_2', 'v10_2', 'u10_3', 'v10_3', 'u10_4', 'v10_4', 'chlor_a_1']
+data_array=data_array.dropna(axis=0)
+data_array.tail()
+
+data_array.to_csv('data_chla.csv', index=False)
